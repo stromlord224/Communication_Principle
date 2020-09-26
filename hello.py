@@ -1,4 +1,7 @@
-import numpy
+import matplotlib.pyplot as plt
+import numpy as np
 
-print("Hello World!")
-print("PI is " , numpy.pi)
+x = np.linspace(-100, 100, 200)
+plt.figure()
+plt.plot(x, np.cos(x))
+plt.show()
