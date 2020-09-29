@@ -23,6 +23,10 @@ class display_signal:
     
     def display_sprcturm(self, signal, title=''):
         signal_fft = np.fft.fftshift(np.fft.fft(signal))    # 傅里叶变换
+        self.specturm_display(signal_fft, title=title)
+
+
+    def specturm_display(self, signal_fft, title=''):
         signal_fft_abs = np.abs(signal_fft)     # 取模
 
         # 换算成实际的模值
