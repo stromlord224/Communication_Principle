@@ -41,7 +41,7 @@ class modulation:
         self.s_c = Ac * np.cos(2 * np.pi * fc * self.t)
         return self.s_c
     
-    def Amplitude_Modulation(self, A0):
+    def Amplitude_Modulation(self, A0, display_flag=False):
         '''
         常规双边带调制，简称调幅(AM)
         @param A0: 直流偏置
@@ -50,12 +50,14 @@ class modulation:
         s_AM = (A0 + self.s_m) * self.s_c
 
         # 显示信号
-        AM_show = display_signal(self.fs, self.N, 2, 1)
-        AM_show.display_time(s_AM, 'AM signal')
-        AM_show.display_sprcturm(s_AM, 'spectrum of AM signal')
+        if display_flag:
+            AM_show = display_signal(self.fs, self.N, 2, 1)
+            AM_show.display_time(s_AM, 'AM signal')
+            AM_show.display_sprcturm(s_AM, 'spectrum of AM signal')
+
         return s_AM
 
-    def DSB_Modulation(self):
+    def DSB_Modulation(self, display_flag=False):
         """
         抑制载波双边带信号：Double Side Band with Suppressed Carrier
         @return: 双边带信号
@@ -63,12 +65,14 @@ class modulation:
         s_DSB = self.s_m * self.s_c
 
         # 显示信号
-        DSB_show = display_signal(self.fs, self.N, 2, 1)
-        DSB_show.display_time(s_DSB, 'DSB signal')
-        DSB_show.display_sprcturm(s_DSB, 'spectrum of DSB signal')
+        if display_flag:
+            DSB_show = display_signal(self.fs, self.N, 2, 1)
+            DSB_show.display_time(s_DSB, 'DSB signal')
+            DSB_show.display_sprcturm(s_DSB, 'spectrum of DSB signal')
+
         return s_DSB
 
-    def SSB_Modulation_filter(self):
+    def SSB_Modulation_filter(self, display_flag=False):
         '''
         单边带调制——滤波法
         @param fc: 载波频率
@@ -86,17 +90,19 @@ class modulation:
                 H[i] = 0
 
         SSB_fft = s_fft * H
-        s_SSB = np.fft.ifft(SSB_fft)
+        s_SSB = np.fft.ifft(np.fft.ifftshift(SSB_fft))
 
         # 显示信号
-        SSB_show = display_signal(self.fs, self.N, 2, 2, title='filter method of SSB')
-        SSB_show.specturm_display(s_fft, 'spectrum of SSB signal')
-        SSB_show.specturm_display(H, 'Filter')
-        SSB_show.specturm_display(SSB_fft, 'filted specturm of signal')
-        SSB_show.display_time(s_SSB, 'SSB signal')
+        if display_flag:
+            SSB_show = display_signal(self.fs, self.N, 2, 2, title='filter method of SSB')
+            SSB_show.specturm_display(s_fft, 'spectrum of SSB signal')
+            SSB_show.specturm_display(H, 'Filter')
+            SSB_show.specturm_display(SSB_fft, 'filted specturm of signal')
+            SSB_show.display_time(s_SSB, 'SSB signal')
+
         return s_SSB
 
-    def SSB_Modulation_shift(self):
+    def SSB_Modulation_shift(self, display_flag=False):
         '''
         单边带调制相移法
         '''
@@ -111,9 +117,11 @@ class modulation:
         s_SSB = 0.5*s_m*np.cos(2*np.pi*fc*t) + 0.5*h_s*np.sin(2*np.pi*fc*t)
 
         # 显示信号
-        SSB_show = display_signal(self.fs, self.N, 2, 1)
-        SSB_show.display_time(s_SSB, 'SSB signal')
-        SSB_show.display_sprcturm(s_SSB, 'specturm of SSB signal')
+        if display_flag:
+            SSB_show = display_signal(self.fs, self.N, 2, 1)
+            SSB_show.display_time(s_SSB, 'shift method of SSB signal')
+            SSB_show.display_sprcturm(s_SSB, 'specturm of SSB signal')
+
         return s_SSB
         
 
@@ -150,9 +158,9 @@ if __name__ == "__main__":
 
     # 创建SSB信号
     # 1、滤波法
-    modula_SSB_filter = modula.SSB_Modulation_filter()
+    modula_SSB_filter = modula.SSB_Modulation_filter(display_flag=True)
     # 2、相移法
-    modula_SSB_shift = modula.SSB_Modulation_shift()
+    modula_SSB_shift = modula.SSB_Modulation_shift(display_flag=True)
 
     plt.show()
 
